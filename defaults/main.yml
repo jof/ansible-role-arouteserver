@@ -27,5 +27,8 @@ arouteserver_varname_local_networks: "local_networks"
 
 arouteserver_irr_as_set_generate: false
 arouteserver_irr_as_set_template: plain_rpsl.j2
+<<<<<<< HEAD
 
 arouteserver_generate_html: false
+=======
+>>>>>>> d8b4c40 (Support generating an IRR RPSL as-set object)
