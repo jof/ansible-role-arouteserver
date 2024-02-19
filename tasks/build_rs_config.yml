@@ -16,7 +16,10 @@
   changed_when: false
 
 - name: "Validate values of variable arouteserver_use_local_files (OpenBGPD)"
-  when: "(hostvars[rs_hostname]['arouteserver_use_local_files'] | default(arouteserver_use_local_files)) and (hostvars[rs_hostname][arouteserver_varname_daemon] == 'openbgpd')"
+  when: >
+    (hostvars[rs_hostname]['arouteserver_use_local_files'] | default(arouteserver_use_local_files))
+    and
+    (hostvars[rs_hostname][arouteserver_varname_daemon] == 'openbgpd')
   ansible.builtin.assert:
     that: "item in arouteserver_valid_local_files_openbgpd"
     fail_msg: "{{ item }} is not an arouteserver local file for OpenBGPD"
@@ -24,7 +27,10 @@
   loop: "{{ hostvars[rs_hostname]['arouteserver_use_local_files'] | default(arouteserver_use_local_files) }}"
 
 - name: "Validate values of variable arouteserver_use_local_files (BIRD)"
-  when: "(hostvars[rs_hostname]['arouteserver_use_local_files'] | default(arouteserver_use_local_files)) and (hostvars[rs_hostname][arouteserver_varname_daemon] == 'bird')"
+  when: >
+    (hostvars[rs_hostname]['arouteserver_use_local_files'] | default(arouteserver_use_local_files))
+    and
+    (hostvars[rs_hostname][arouteserver_varname_daemon] == 'bird')
   ansible.builtin.assert:
     that: "item in arouteserver_valid_local_files_bird"
     fail_msg: "{{ item }} is not an arouteserver local file for BIRD"
