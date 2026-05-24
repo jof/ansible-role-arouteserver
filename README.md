@@ -22,7 +22,7 @@ Most of the behaviours of this role can be set using some variables that are doc
 
 ### Installation
 
-ARouteServer is installed using `pip` via PyPI or from a local package on the control machine. When the `upgrade` tag is used, the `--upgrade` argument is passed to `pip` to allow an upgrade of the installation.
+ARouteServer is installed using `pip` via PyPI or from a local package on the control machine. When the ansible variable `arouteserver_upgrade` is set to `true` (defaults to `false`), the `--upgrade` argument is passed to `pip` to allow an upgrade of the installation.
 
 Any local file within the role's `templates/config` directory is copied into the ARouteServer's directory (Jinja2 templates are supported).
 
@@ -52,8 +52,6 @@ If set, an external handler is notified when the configuration files change.
 
 * `build_rs_config`: when set, only the route server configuration files are built.
 
-* `upgrade`: when set, an upgrade of the ARouteServer's package is attempted.
-
 ## Requirements
 
 No requirements.
@@ -65,6 +63,7 @@ Variables used by this role are listed below, grouped by topic.
 ### Package installation
 
 * (optional) `arouteserver_local_package_file`: when set, the role installs ARouteServer using the package at this local path, otherwise the last version from PyPI is fetched and installed (default).
+* (optional) `arouteserver_upgrade`; when set to `true` passes `--upgrade` to PIP to enable selective upgrades of the upstream `arouteserver` python package.
 
 ### Route server configuration: general policy (`general.yml`)
 
@@ -82,6 +81,16 @@ Mandatory, one of the 3 following variables:
 * (mandatory when Euro-IX import is used) `arouteserver_clients_from_euroix_ixp_id`: ID of the IXP referenced within the Euro-IX member list file.
 
 * (optional) `arouteserver_clients_from_euroix_extra_args`: any extra arguments that should be used with the `clients-from-euroix` [command](https://arouteserver.readthedocs.io/en/latest/USAGE.html#create-clients-yml-file-from-euro-ix-member-list-json-file). Example: `--merge-from-peeringdb as-set max-prefix --vlan-id 123`.
+
+### Route server customization: site-specific custom configuration files
+
+The variables `arouteserver_local_files_dir` and `arouteserver_use_local_files` can be set to pass *pointers* to local custom files to ARouteServer via its [`--use-local-files` command line option](https://arouteserver.readthedocs.io/en/latest/CONFIG.html#site-specific-custom-configuration-files).
+
+### Route server operations: [RFC8326](https://datatracker.ietf.org/doc/html/rfc8326) graceful shutdown
+
+The variable `arouteserver_perform_graceful_shutdown`, when set, instruct ARouteServer to build the following configuration with the [graceful shutdown](https://arouteserver.readthedocs.io/en/latest/USAGE.html#route-server-graceful-shutdown) option enabled, to temporarily drain traffic during a maintenance event.
+
+Given the nature of the graceful shutdown operation, it's suggested to not set this variable to `true` permanently, but rather [to pass it at runtime](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#defining-variables-at-runtime) only before the maintenance is performed.
 
 ### Integration with other roles
 
